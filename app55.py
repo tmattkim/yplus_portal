@@ -36,7 +36,11 @@ from io import BytesIO
 import cv2
 import torch
 import torchaudio
-import mediapipe as mp
+# import mediapipe as mp
+from mediapipe.python.solutions import face_detection
+class mp:
+    solutions = type("solutions", (), {})()
+    solutions.face_detection = face_detection
 import subprocess
 import math
 import plotly.graph_objects as go

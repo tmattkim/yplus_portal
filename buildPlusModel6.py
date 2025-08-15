@@ -10,7 +10,12 @@ import numpy as np
 import torch
 import torchaudio
 import torchvision.transforms as T
-import mediapipe as mp
+# import mediapipe as mp
+from mediapipe.python.solutions import face_mesh, face_detection
+class mp:
+    solutions = type("solutions", (), {})()
+    solutions.face_mesh = face_mesh
+    solutions.face_detection = face_detection
 import math
 from tqdm import tqdm
 from sklearn.metrics import mean_squared_error

@@ -6,7 +6,12 @@ import torch
 import whisper
 import torchaudio
 import tempfile
-import mediapipe as mp
+# import mediapipe as mp
+from mediapipe.python.solutions import face_mesh, face_detection
+class mp:
+    solutions = type("solutions", (), {})()
+    solutions.face_mesh = face_mesh
+    solutions.face_detection = face_detection
 import numpy as np
 import subprocess
 import math
