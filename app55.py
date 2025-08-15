@@ -1889,5 +1889,5 @@ else:  # VC Interface
                 st.error("Incorrect password. Try again.")
 
     else:
-        st.set_page_config(page_title="VC Dealflow Management", layout="wide")
+        # st.set_page_config(page_title="VC Dealflow Management", layout="wide")
         vc_main_app_logic()
