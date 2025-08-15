@@ -33,3 +33,6 @@ gdown==5.2.0
 oauth2client
 fpdf2
 tensorflow-cpu==2.15.0
+keras
+tf-keras
+mtcnn
