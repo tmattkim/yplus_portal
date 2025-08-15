@@ -15,7 +15,7 @@ python-pptx
 opencv-python-headless==4.8.1.78
 torch
 torchaudio
-mediapipe==0.10.13
+mediapipe==0.10.10
 plotly
 fpdf
 deepface==0.0.91
@@ -24,10 +24,8 @@ torchvision
 google-api-python-client
 google-auth
 google-auth-oauthlib
-tf-keras
+tensorflow-cpu==2.14.0
 kaleido
 scikit-learn
 python-docx
 gdown
-google-auth
-tensorflow-cpu==2.13.0
