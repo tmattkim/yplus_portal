@@ -32,3 +32,4 @@ python-docx==1.1.2
 gdown==5.2.0
 oauth2client
 fpdf
+tensorflow-cpu==2.15.0
