@@ -18,7 +18,7 @@ torchaudio
 mediapipe==0.10.13
 plotly
 fpdf
-deepface
+deepface==0.0.91
 transformers
 torchvision
 google-api-python-client
@@ -30,3 +30,4 @@ scikit-learn
 python-docx
 gdown
 google-auth
+tensorflow-cpu==2.13.0
