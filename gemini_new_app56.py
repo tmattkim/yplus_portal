@@ -570,14 +570,28 @@ def founder_form():
         # Only run this once on load
         if "report_uploaded" not in st.session_state:
             try:
+                # Define the scopes for Google Sheets and Drive access
                 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-                creds = ServiceAccountCredentials.from_json_keyfile_name("gen-lang-client-0692128546-430c56e9a017.json", scope)
-                client = gspread.authorize(creds)
-                # sheet = client.open("YPlus Submissions")
-                sheet = client.open_by_key("1g5g7wZoh7a1xcJh-G8oL7F3fvA3z_gfpWPHNTKXcu9k")
 
-                row_main = [st.session_state["fields"].get(k, "") for k in st.session_state["fields"]]
-                sheet.worksheet("Submissions").append_row(row_main)
+                # Load the service account info from Streamlit secrets
+                # The service account JSON content should be stored as a string in st.secrets
+                try:
+                    service_account_info = json.loads(st.secrets["google_sheets"]["service_account"])
+                    creds = service_account.Credentials.from_service_account_info(
+                        service_account_info,
+                        scopes=scope
+                    )
+                    client = gspread.authorize(creds)
+
+                    # Open the Google Sheet and append the row
+                    sheet = client.open_by_key("1g5g7wZoh7a1xcJh-G8oL7F3fvA3z_gfpWPHNTKXcu9k")
+                    row_main = [st.session_state["fields"].get(k, "") for k in st.session_state["fields"]]
+                    sheet.worksheet("Submissions").append_row(row_main)
+
+                except KeyError:
+                    st.error("❌ Google Sheets service account credentials not found in Streamlit secrets. Please configure `st.secrets`.")
+                except Exception as e:
+                    st.error(f"❌ Failed to connect to Google Sheets: {e}")
 
                 temp_video_name = st.session_state.get("temp_video_name", None)
 
