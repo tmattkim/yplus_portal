@@ -1142,12 +1142,15 @@ def founder_form():
                 safe_company_name = sanitize_filename(company_name)
 
                 # Create subfolder with company name
+                print("Creating folder")
                 company_folder_id = create_drive_folder(company_name, PARENT_FOLDER_ID)
 
                 # Upload files to this folder
+                print("Creating PDF")
                 report_filename = f"{safe_company_name}_submission_report.pdf"
                 uploaded_report_id = upload_in_memory_file_to_drive(pdf_stream, report_filename, company_folder_id, "application/pdf")
-
+                
+                print("Uploading deck")
                 deck_name = f"{safe_company_name}_PitchDeck.pdf"
                 deck_bytes = st.session_state.get("deck_bytes", None)
                 if deck_bytes:
