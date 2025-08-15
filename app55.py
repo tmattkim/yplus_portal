@@ -1176,12 +1176,11 @@ def generate_memo_from_drive(deal_name):
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
                     tmp_file.write(file_bytes_io.getvalue())
                     temp_path = tmp_file.name
-                
-                # Upload the temporary file using its path
-                gemini_inputs.append(genai.upload_file(tmp_file.name, mime_type='application/pdf'))
-
-                # Clean up the temporary file immediately after uploading
-                os.unlink(temp_path)
+                try:
+                    with open(temp_path, "rb") as f:
+                        gemini_inputs.append(genai.upload_file(f, mime_type='application/pdf'))
+                finally:
+                    os.unlink(temp_path)
 
             except Exception as e:
                 st.warning(f"Could not process PDF {file['name']}: {e}")
