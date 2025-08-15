@@ -1146,7 +1146,7 @@ def founder_form():
                 company_folder_id = create_drive_folder(company_name, PARENT_FOLDER_ID)
 
                 # Upload files to this folder
-                print("Creating PDF")
+                print("Uploading PDF")
                 report_filename = f"{safe_company_name}_submission_report.pdf"
                 uploaded_report_id = upload_in_memory_file_to_drive(pdf_stream, report_filename, company_folder_id, "application/pdf")
                 
