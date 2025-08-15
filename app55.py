@@ -1177,7 +1177,7 @@ def generate_memo_from_drive(deal_name):
                     tmp_file.write(file_bytes_io.getvalue())
                     temp_path = tmp_file.name
                 try:
-                    gemini_inputs.append(genai.upload_file(f, mime_type='application/pdf'))
+                    gemini_inputs.append(genai.upload_file(temp_path, mime_type='application/pdf'))
                 finally:
                     os.unlink(temp_path)
 
