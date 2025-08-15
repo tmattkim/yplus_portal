@@ -15,7 +15,7 @@ python-pptx
 opencv-python-headless
 torch
 torchaudio
-mediapipe
+mediapipe==0.10.13
 plotly
 fpdf
 deepface
