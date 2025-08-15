@@ -1163,10 +1163,26 @@ def generate_memo_from_drive(deal_name):
     for file in files:
         file_mime_type = file.get('mimeType')
         if file_mime_type == 'application/pdf':
+            # st.info(f"Processing PDF document: {file['name']}")
+            # try:
+            #     file_bytes_io = download_file_from_drive(file['id'], drive_service)
+            #     gemini_inputs.append(genai.upload_file(file_bytes_io, mime_type='application/pdf'))
+            # except Exception as e:
+            #     st.warning(f"Could not process PDF {file['name']}: {e}")
             st.info(f"Processing PDF document: {file['name']}")
             try:
                 file_bytes_io = download_file_from_drive(file['id'], drive_service)
-                gemini_inputs.append(genai.upload_file(file_bytes_io, mime_type='application/pdf'))
+                # Create a temporary file and write the BytesIO content to it
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+                    tmp_file.write(file_bytes_io.getvalue())
+                    temp_path = tmp_file.name
+                
+                # Upload the temporary file using its path
+                gemini_inputs.append(genai.upload_file(tmp_file.name, mime_type='application/pdf'))
+
+                # Clean up the temporary file immediately after uploading
+                os.unlink(temp_path)
+
             except Exception as e:
                 st.warning(f"Could not process PDF {file['name']}: {e}")
         elif file_mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' or file['name'].endswith('.pptx'):
