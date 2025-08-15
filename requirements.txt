@@ -5,7 +5,7 @@ Pillow
 google-generativeai
 gspread
 oauth2client
-numpy
+numpy==1.25.2
 reportlab
 matplotlib
 requests
@@ -15,7 +15,7 @@ python-pptx
 opencv-python-headless==4.8.1.78
 torch
 torchaudio
-mediapipe==0.10.10
+mediapipe==0.10.13
 plotly
 fpdf
 deepface==0.0.91
@@ -24,7 +24,7 @@ torchvision
 google-api-python-client
 google-auth
 google-auth-oauthlib
-tensorflow-cpu==2.14.0
+tensorflow-cpu==2.13.0
 kaleido
 scikit-learn
 python-docx
