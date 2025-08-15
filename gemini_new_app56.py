@@ -198,7 +198,7 @@ def founder_form():
         st.session_state.page = "form"
 
     # Streamlit UI
-    st.set_page_config(page_title="Y+ Founder Submission", layout="wide")
+    # st.set_page_config(page_title="Y+ Founder Submission", layout="wide")
     # st.title("🚀 Founder Inquiry Submission")
 
     # Configure Gemini
