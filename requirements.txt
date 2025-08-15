@@ -12,7 +12,7 @@ requests
 pandas
 PyPDF2
 python-pptx
-opencv-python-headless==4.8.1.78 --force-reinstall
+opencv-python-headless==4.8.1.78
 torch
 torchaudio
 mediapipe==0.10.13
