@@ -1858,7 +1858,7 @@ def vc_main_app_logic():
 
 # --- Main Application Logic ---
 st.set_page_config(
-    page_title="Y+ Portal", layout="wide",
+    page_title="Y+ Ventures Portal", layout="wide",
     page_icon="icons/yplusventures_logo.jpeg"
 )
 
