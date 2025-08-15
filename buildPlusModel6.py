@@ -1,4 +1,5 @@
-# Built off of buildPlusModel4
+# I apologize in advance for the messy code and lack of comments
+
 import os
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"

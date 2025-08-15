@@ -1,4 +1,5 @@
-# Building off of 35 again
+# I apologize in advance for the messy code and lack of comments
+
 import streamlit as st
 import os
 import tempfile

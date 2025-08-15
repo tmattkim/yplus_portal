@@ -1,3 +1,5 @@
+# I apologize in advance for the messy code and lack of comments
+
 import os
 import cv2
 import torch

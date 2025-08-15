@@ -12,7 +12,7 @@ requests
 pandas
 PyPDF2
 python-pptx
-opencv-python
+opencv-python-headless
 torch
 torchaudio
 mediapipe
