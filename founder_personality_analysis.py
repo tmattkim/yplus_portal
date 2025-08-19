@@ -41,7 +41,7 @@ transform = T.Compose([
 ])
 
 MODEL_PATH = "finetuned_multimodal_model6.pth"
-GOOGLE_DRIVE_ID = "1IcFlwlC9fcN5kpPIeDka12SAMby3JZkm"
+GOOGLE_DRIVE_ID = "1IcFlwlC9fcN5kpPIeDka12SAMby3JZkm"  # where the model weights are stored
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 gemini_model = genai.GenerativeModel("models/gemini-2.0-flash")
 

@@ -503,7 +503,7 @@ def founder_form():
                     client = gspread.authorize(creds)
 
                     # Open the Google Sheet and append the row
-                    sheet = client.open_by_key("1g5g7wZoh7a1xcJh-G8oL7F3fvA3z_gfpWPHNTKXcu9k")
+                    sheet = client.open_by_key(st.secrets["google_sheets"]["google_sheet_key"])
                     row_main = [st.session_state["fields"].get(k, "") for k in st.session_state["fields"]]
                     sheet.worksheet("Submissions").append_row(row_main)
 
@@ -1042,7 +1042,7 @@ def founder_form():
                     return folder.get("id")
 
                 # Parent folder in Google Drive
-                PARENT_FOLDER_ID = "1evRwL2yafIdMfyXwuqcHz44YNnjN8x3Q"
+                PARENT_FOLDER_ID = st.secrets["folder"]["parent_folder_id"]
                 company_name = st.session_state["fields"].get("Company Name", "Unknown_Company")
                 safe_company_name = sanitize_filename(company_name)
 

@@ -100,8 +100,8 @@ MEMO_ANALYSIS_COLUMNS = [
     "best_case", "worst_case", "key_risks_and_mitigations", "pros", "cons",
     "overall_risk", "investment_thesis"
 ]
-PARENT_FOLDER_ID = "1evRwL2yafIdMfyXwuqcHz44YNnjN8x3Q"
-GOOGLE_SHEET_KEY = "1g5g7wZoh7a1xcJh-G8oL7F3fvA3z_gfpWPHNTKXcu9k"
+PARENT_FOLDER_ID = st.secrets["folder"]["parent_folder_id"]
+GOOGLE_SHEET_KEY = st.secrets["google_sheets"]["google_sheet_key"]
 HARMONIC_BASE = "https://api.harmonic.ai"
 HARMONIC_API_KEY = st.secrets["HARMONIC_API_KEY"]
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.readonly']
@@ -745,7 +745,7 @@ def authenticate_google_sheets():
         client = gspread.service_account_from_dict(creds_dict)
 
         # Open spreadsheet by key
-        spreadsheet = client.open_by_key(st.secrets["google_sheets"]["google_sheet_key"])
+        spreadsheet = client.open_by_key(GOOGLE_SHEET_KEY)
         return spreadsheet
 
     except KeyError as e:
