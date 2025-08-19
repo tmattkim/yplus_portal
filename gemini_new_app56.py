@@ -1,6 +1,6 @@
 # Note: I apologize in advance for the messy code and lack of comments. Some of the functions may not be used
 # as they are vestigial remnants of earlier iterations of the program. Some of the functions may also be under
-# incorrect sections.
+# incorrect sections. There are some remaining print statements from debugging.
 
 # This is the streamlined founder intake form with AI powered extraction and autofill and personality insights
 # for videos.
