@@ -1,4 +1,9 @@
-# I apologize in advance for the messy code and lack of comments
+# Note: I apologize in advance for the messy code and lack of comments. Some of the functions may not be used
+# as they are vestigial remnants of earlier iterations of the program. Some of the functions may also be under
+# incorrect sections.
+
+# This is the streamlined founder intake form with AI powered extraction and autofill and personality insights
+# for videos.
 
 import streamlit as st
 import os
@@ -40,35 +45,6 @@ def founder_form():
     LABEL_STD = np.array([0.14697756, 0.1552065, 0.15228453, 0.13637365, 0.15353347])
     HARMONIC_API_KEY = os.getenv("HARMONIC_API_KEY")
 
-    # def enrich_company(company_identifier: dict, api_key: str):
-    #     """
-    #     Call Harmonic API to enrich company info.
-
-    #     company_identifier: dict with exactly one key like {"website_domain": "harmonic.ai"}
-    #     api_key: your Harmonic API key
-
-    #     Returns: dict of company info or {"status":"pending"} or {"status":"error"}
-    #     """
-    #     url = "https://api.harmonic.ai/companies"
-    #     headers = {
-    #         "Content-Type": "application/json",
-    #         "accept": "application/json",
-    #         "apikey": api_key
-    #     }
-
-    #     if len(company_identifier) != 1:
-    #         raise ValueError("Provide exactly one company identifier.")
-
-    #     try:
-    #         response = requests.post(url, headers=headers, json=company_identifier, timeout=15)
-    #         if response.status_code == 404:
-    #             # Enrichment pending; Harmonic recommends retrying later
-    #             return {"status": "pending", "message": response.json()}
-    #         response.raise_for_status()
-    #         return response.json()
-    #     except requests.RequestException as e:
-    #         return {"status": "error", "message": str(e)}
-
     def query_harmonic(domain: str, api_key: str):
         url = "https://api.harmonic.ai/companies"
         headers = {
@@ -83,46 +59,10 @@ def founder_form():
         print(response)
         response.raise_for_status()
         data = response.json()
-        # print("Harmonic JSON:", json.dumps(data, indent=2))
         return data
-
-    # def parse_company_info(data):
-    #     if data.get("status") == "pending":
-    #         return {"message": "Enrichment in progress, try again later."}
-    #     if data.get("status") == "error":
-    #         return {"error": data.get("message")}
-
-    #     info = {
-    #         "Name": data.get("name"),
-    #         "Description": data.get("description") or data.get("short_description") or data.get("external_description"),
-    #         "Stage": data.get("stage"),
-    #         "Headcount": data.get("headcount"),
-    #         "Location": data.get("location", {}).get("display"),
-    #         "Website": data.get("website", {}).get("url"),
-    #         "Socials": ", ".join(f"{k}: {v}" for k, v in (data.get("socials") or {}).items() if v),
-    #         "Tags": ", ".join(data.get("tags", [])),
-    #         "Founders": ", ".join([p.get("name") for p in data.get("people", []) if p.get("role") == "Founder"]),
-    #         "Funding": data.get("funding", {}).get("display"),
-    #     }
-    #     # Remove empty fields
-    #     print(info)
-    #     return {k: v for k, v in info.items() if v}
-    #     # Only remove None or empty strings
 
     def parse_company_info(data):
         print("Parsing")
-        #status = data.get("status")
-        #if status == "pending":
-        #    return {"message": "Enrichment in progress, try again later."}
-        #if status == "error":
-        #    return {"error": data.get("message")}
-        
-        # print("location and website")
-        # location = data.get('location') or {}
-        # city = location.get('city', '')
-        # region = location.get('region', '')
-        # country = location.get('country', '')
-        # website_info = data.get('website') or {}
         
         print("Now info")
         info = {
@@ -131,9 +71,6 @@ def founder_form():
             "Stage": data.get("stage"),
             "Headcount": data.get("headcount"),
             "Ownership": data.get("ownership_status")
-            # "Location": f"{city} {region} {country}".strip(),
-            # "URL": website_info.get('url') or "",
-            # "domain": website_info.get('domain') or ""
         }
         
         print("done info")
@@ -141,7 +78,6 @@ def founder_form():
         print(cleaned_info)
         return cleaned_info
 
-    # Example usage with retry logic
     def get_harmonic_insights(company_identifier, api_key, retries=3, wait_seconds=10):
         for attempt in range(retries):
             data = query_harmonic(company_identifier, api_key)
@@ -197,16 +133,12 @@ def founder_form():
     if "page" not in st.session_state:
         st.session_state.page = "form"
 
-    # Streamlit UI
-    # st.set_page_config(page_title="Y+ Founder Submission", layout="wide")
-    # st.title("🚀 Founder Inquiry Submission")
-
     # Configure Gemini
     genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
     model = genai.GenerativeModel("gemini-2.5-flash")
 
     def run_analysis(deck, video, text_pitch):
-            # Transcribe video if provided
+        # Transcribe video if provided
         transcript = ""
         temp_video_name = None
         if video is not None:
@@ -310,8 +242,6 @@ def founder_form():
                 "Referral & How Heard About Us (We would like to thank them!)"
             ]
 
-            # 1. Normalize values directly from the parsed JSON using the predefined list of fields.
-            #    This avoids creating new fields for sub-keys.
             normalized_output = {
                 field: normalize_field_value(parsed_json.get(field, ""))
                 for field in EXPECTED_FIELDS
@@ -319,16 +249,6 @@ def founder_form():
             
             st.session_state["extracted_data"] = normalized_output
             st.session_state["show_review_form"] = True
-
-            # # 2. Show extracted fields clearly to user for review.
-            # #    This will now strictly follow the order and content of EXPECTED_FIELDS.
-            # st.subheader("✅ Review Auto-Filled Submission")
-            # for key, value in normalized_output.items():
-            #     st.markdown(f"**{key}**: {value if value else '*Not provided*'}")
-
-            # # Optional: Raw JSON debug view
-            # with st.expander("See Raw Gemini JSON"):
-            #     st.json(parsed_json)
 
         except Exception as e:
             st.error(f"❌ Gemini analysis failed: {e}")
@@ -567,14 +487,13 @@ def founder_form():
             </div>
             """, unsafe_allow_html=True)
 
-        # Only run this once on load
+        # Only run once on load
         if "report_uploaded" not in st.session_state:
             try:
                 # Define the scopes for Google Sheets and Drive access
                 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
                 # Load the service account info from Streamlit secrets
-                # The service account JSON content should be stored as a string in st.secrets
                 try:
                     service_account_info = json.loads(st.secrets["google_sheets"]["service_account"])
                     creds = service_account.Credentials.from_service_account_info(
@@ -658,18 +577,11 @@ def founder_form():
                     return "".join(c if c.isalnum() or c in "._-" else "_" for c in name).strip()
                 
                 def make_radar_chart(title, labels, values, color, filename):
-                    # print(f"make_radar_chart called with {len(labels)} labels and {len(values)} values")
-                    # print(f"Labels: {labels}")
-                    # print(f"Values before extension: {values}")
-
                     num_vars = len(labels)
                     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
                     values = list(values)          # convert numpy array to list first
                     values = values + values[:1]   # concatenate by creating a new list
                     angles = angles + angles[:1]
-
-                    # print(f"Values after extension: {values}")
-                    # print(f"Angles after extension: {angles}")
 
                     fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
                     ax.set_ylim(0, 1)  # set radius limits from 0 to 1
@@ -734,21 +646,18 @@ def founder_form():
                         story.append(Spacer(1, 10))
 
                     # Section 1: Founder Submission
-                    #add_section_title("📋 Founder Submission")
                     add_section_title("-- Founder Submission --")
                     for key, value in fields.items():
                         add_label_content(key, value)
 
                     # Section 1.5: Optional Text Pitch
                     if text_pitch:
-                        #add_section_title("💬 Text Elevator Pitch")
                         add_section_title("-- Text Elevator Pitch --")
                         add_label_content("Pitch", text_pitch)
 
                     # Only include analysis section if video was uploaded
                     if has_video:
                         story.append(PageBreak())
-                        #add_section_title("🧠 Founder Personality Analysis")
                         add_section_title("-- Founder Personality Analysis --")
 
                         add_label_content("Video Transcript", analysis.get("video_transcript", ""))
@@ -757,11 +666,8 @@ def founder_form():
 
                         if len(video_frames) > 0:
                             story.append(PageBreak())
-                            # add_section_title("🎥 Sample Video Frames Used for Emotion Analysis")
-
-                            # Used to be 1.5, 1.2
                             max_image_width = 0.8 * inch
-                            max_image_height = 0.64 * inch  # maintain aspect ratio ~ 4:3
+                            max_image_height = 0.64 * inch
                             # Limit to first 16 frames
                             max_frames = 16
                             frame_images = [
@@ -783,10 +689,7 @@ def founder_form():
                                 ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
                                 ("ALIGN", (0,0), (-1,-1), "CENTER"),
                                 ("BOTTOMPADDING", (0,0), (-1,-1), 6),
-                                ("TOPPADDING", (0,0), (-1,-1), 6),
-                                # Optional: Uncomment below to add borders
-                                # ("BOX", (0,0), (-1,-1), 0.25, colors.grey),
-                                # ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+                                ("TOPPADDING", (0,0), (-1,-1), 6)
                             ]))
 
                             story.append(table)
@@ -850,23 +753,14 @@ def founder_form():
                     return output_path
 
                 def create_full_pdf_in_memory(fields, analysis, text_pitch=None, has_video=False, harmonic_data=None):
-                    #pdfmetrics.registerFont(TTFont('DejaVu', 'DejaVuSans.ttf')) # You need to handle font embedding without a file path, which can be complex. For a simple solution, stick to standard fonts or pre-load them.
-                    # from reportlab.lib.colors import colors # If you use colors
-                    
-                    # ✅ MODIFICATION: Use BytesIO instead of a filepath
                     buffer = BytesIO()
                     doc = SimpleDocTemplate(buffer, pagesize=letter,
                                                     rightMargin=50, leftMargin=50,
                                                     topMargin=50, bottomMargin=50)
-
-                    # ... (Your existing code to build the 'story' list remains the same)
-                    # The image creation part `make_radar_chart` still writes to a temp file, which is fine
-                    # as long as you clean them up immediately after adding them to the PDF.
-                    # The logic below this point for story list creation does not change.
                     
                     styles = getSampleStyleSheet()
                     normal_style = ParagraphStyle(
-                        name='Normal', # Using standard font to avoid issues with DejaVu
+                        name='Normal',
                         parent=styles['Normal'],
                         fontSize=12,
                         leading=15,
@@ -929,7 +823,6 @@ def founder_form():
                                 while len(row) < row_length:
                                     row.append("")
                             
-                            from reportlab.lib import colors
                             table = Table(image_rows, hAlign='LEFT', colWidths=[max_image_width]*row_length)
                             table.setStyle(TableStyle([
                                 ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
@@ -996,7 +889,6 @@ def founder_form():
                     for path in temp_images:
                         os.unlink(path)
 
-                    # ✅ MODIFICATION: Move the buffer's cursor to the beginning
                     buffer.seek(0)
                     return buffer
                 
@@ -1052,7 +944,6 @@ def founder_form():
                     print("Harmonic company insights:")
                     for k, v in harmonic_data.items():
                         print(f"{k}: {v}")
-                # Pass harmonic_data to your PDF generation to add a "Harmonic Insights" section.
                 print("Harmonic enrichment done", harmonic_data)
 
                 # Generate the report
@@ -1150,7 +1041,7 @@ def founder_form():
 
                     return folder.get("id")
 
-                # Parent folder in your Google Drive
+                # Parent folder in Google Drive
                 PARENT_FOLDER_ID = "1evRwL2yafIdMfyXwuqcHz44YNnjN8x3Q"
                 company_name = st.session_state["fields"].get("Company Name", "Unknown_Company")
                 safe_company_name = sanitize_filename(company_name)

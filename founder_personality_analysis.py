@@ -1,4 +1,6 @@
-# I apologize in advance for the messy code and lack of comments
+# Note: I apologize in advance for the messy code and lack of comments.
+
+# This is for founder personality analysis inference.
 
 import os
 import cv2
@@ -6,7 +8,6 @@ import torch
 import whisper
 import torchaudio
 import tempfile
-# import mediapipe as mp
 from mediapipe.python.solutions import face_mesh, face_detection
 class mp:
     solutions = type("solutions", (), {})()
@@ -316,7 +317,7 @@ def run_personality_analysis(video_path, transcript, company_name):
         "big_five": preds.tolist(),
         "big_five_flags": flags,
         "vc_scores": vc_scores,
-        "vc_traits": vc_traits,       # add full trait dict with reasoning
+        "vc_traits": vc_traits,       
         "qualitative": qualitative.strip(),
         "audio_summary": audio_summary,
         "emotions": emotions,

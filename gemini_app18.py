@@ -1,4 +1,8 @@
-# I apologize in advance for the messy code and lack of comments
+# Note: I apologize in advance for the messy code and lack of comments. Some of the functions may not be used
+# as they are vestigial remnants of earlier iterations of the program. Some of the functions may also be under
+# incorrect sections.
+
+# This is for founder personality analysis inference with Streamlit UI elements.
 
 import os
 import cv2
@@ -6,7 +10,6 @@ import torch
 import whisper
 import torchaudio
 import tempfile
-# import mediapipe as mp
 from mediapipe.python.solutions import face_mesh, face_detection
 class mp:
     solutions = type("solutions", (), {})()
@@ -92,19 +95,6 @@ def extract_audio_from_video(video_path):
 def transcribe(video_path, whisper_model):
     return whisper_model.transcribe(video_path)["text"]
 
-# def summarize_audio(video_path, processor, wav2vec_model):
-#     wav_path = extract_audio_from_video(video_path)
-#     waveform, sample_rate = torchaudio.load(wav_path)
-#     if waveform.ndim == 2 and waveform.shape[0] > 1:
-#         waveform = waveform.mean(dim=0)
-#     else:
-#         waveform = waveform.squeeze(0)
-#     inputs = processor(waveform, sampling_rate=sample_rate, return_tensors="pt")
-#     with torch.no_grad():
-#         features = wav2vec_model(**inputs).last_hidden_state.mean(dim=1).squeeze()
-#     return ("The speaker uses a dynamic vocal tone with varied inflection and pacing." if features.var().item() > 0.08 else
-#             "The speaker has a calm and consistent vocal tone with low variability.")
-
 def summarize_audio(video_path, processor, wav2vec_model):
     wav_path = extract_audio_from_video(video_path)
     waveform, sample_rate = torchaudio.load(wav_path)
@@ -120,7 +110,7 @@ def summarize_audio(video_path, processor, wav2vec_model):
         mean_features = features.mean(dim=1).squeeze()
         variance = mean_features.var().item()
 
-    # More nuanced thresholds
+    # Thresholds based on the data distribution
     if variance >= 0.0333:
         summary = "The speaker's vocal tone is highly expressive, with noticeable emotional range and dynamic shifts in pitch and pacing."
     elif 0.0283 <= variance < 0.0333:
@@ -130,7 +120,6 @@ def summarize_audio(video_path, processor, wav2vec_model):
     else:
         summary = "The speaker demonstrates a flat or monotone vocal tone, with minimal emotional variation or inflection."
 
-    # Optionally add numerical value
     summary += f" (Feature variance: {variance:.3f})"
     return summary
 
@@ -301,13 +290,7 @@ Do NOT repeat the VC traits scores in the qualitative assessment or recommendati
 
     return vc_traits, cleaned_report
 
-# Streamlit UI
-# st.set_page_config(page_title="Founder Personality Analyzer", layout="wide")
-# st.title("🧠 Founder Personality Analyzer")
-def founder_personality_analyzer():
-    # st.markdown("Or upload a startup founder video. We'll analyze their personality using multimodal AI and provide an investor-style evaluation.")
-    # st.markdown("<small>Or upload a startup founder video. We'll analyze their personality using multimodal AI and provide an investor-style evaluation.</small>", unsafe_allow_html=True)
-    
+def founder_personality_analyzer():    
     uploaded_file = st.file_uploader("🎥 Or upload a startup founder recording (MP4). Please ensure only one person is present.", type=["mp4"])
 
     if uploaded_file:
@@ -363,7 +346,6 @@ def founder_personality_analyzer():
             def create_radar_chart(traits, values, title="Big Five Traits", color='rgba(31,119,180,0.7)'):
                 fig = go.Figure()
 
-                # Repeat first value to close the radar
                 values += values[:1]
                 traits += traits[:1]
 
@@ -414,7 +396,6 @@ def founder_personality_analyzer():
                 "**Qualitative Assessment:": "### Qualitative Assessment",
                 "**Recommendation:": "### Recommendation",
                 "**VC Trait Ratings:": "### VC Trait Ratings",
-                # add any other headers you want formatted here
             }
             for old, new in replacements.items():
                 text = text.replace(old, new)

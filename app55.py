@@ -1,4 +1,8 @@
-# I apologize in advance for the messy code and lack of comments
+# Note: I apologize in advance for the messy code and lack of comments. Some of the functions may not be used
+# as they are vestigial remnants of earlier iterations of the program. Some of the functions may also be under
+# incorrect sections.
+
+# This is the main app with the Founder Interface and VC Interface.
 
 import streamlit as st
 import os
@@ -59,7 +63,6 @@ from googleapiclient.http import MediaIoBaseDownload
 
 
 # --- Constants & Global Configuration ---
-# Your constants and API keys are loaded from the secrets.toml file
 TRAITS = ["Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism"]
 VC_TRAITS = ["Vision", "Grit", "Coachability", "Charisma", "Execution", "Emotional Stability"]
 LABEL_MEAN = np.array([0.56628148, 0.52273139, 0.47614642, 0.54818132, 0.52028646])
@@ -416,7 +419,7 @@ def get_drive_service():
     """Gets a Google Drive service object using secrets."""
     try:
         # Load the JSON string from Streamlit secrets
-        creds_json_str = st.secrets["google_sheets"]["service_account"]  # adjust key if different
+        creds_json_str = st.secrets["google_sheets"]["service_account"]
         creds_dict = json.loads(creds_json_str)
 
         # Create credentials with Drive scope
@@ -488,9 +491,8 @@ def upload_file_to_drive(
     parent_folder_id,
     desired_name=None,
 ):
-    service = get_drive_service()  # Removed the service_account_path argument
+    service = get_drive_service()
     if not service:
-        # Handle the case where get_drive_service failed to authenticate
         return None
 
     file_name = desired_name if desired_name else os.path.basename(filepath)
@@ -732,37 +734,11 @@ def create_pdf(analysis, filename="bias_analysis.pdf"):
 
 # ========== GOOGLE DRIVE/SHEETS INTEGRATION ==========
 
-    # def authenticate_google_sheets():
-    #     """Authenticates with Google Sheets using Streamlit secrets."""
-    #     try:
-    #         # Access the dictionary of credentials from Streamlit secrets.
-    #         # The key "gen_lang_client" must match the section in your secrets.toml.
-    #         creds_dict = st.secrets["gen_lang_client"]
-
-    #         # Use gspread's modern method for authenticating from a dictionary.
-    #         # This handles the Google Auth credentials automatically.
-    #         creds = gspread.service_account_from_dict(creds_dict)
-            
-    #         client = gspread.authorize(creds)
-            
-    #         # Access the spreadsheet key from secrets as well.
-    #         spreadsheet = client.open_by_key(st.secrets["google_sheets"]["google_sheet_key"])
-            
-    #         return spreadsheet
-    #     except KeyError as e:
-    #         # This provides a specific error message if a secret key is missing.
-    #         st.error(f"Missing a key in Streamlit secrets: {e}. Please configure the 'gen_lang_client' and 'google_sheets' sections.")
-    #         return None
-    #     except Exception as e:
-    #         # Catches any other authentication-related errors.
-    #         st.error(f"Error authenticating with Google Sheets: {e}")
-    #         return None
-
 def authenticate_google_sheets():
     """Authenticates with Google Sheets using Streamlit secrets."""
     try:
         # Load the JSON string from secrets and parse it
-        creds_json_str = st.secrets["google_sheets"]["service_account"]  # adjust key if needed
+        creds_json_str = st.secrets["google_sheets"]["service_account"]
         creds_dict = json.loads(creds_json_str)
 
         # Create gspread client directly
@@ -871,7 +847,6 @@ Partial transcript for context:
         st.stop()
 
 def create_full_pdf(fields, analysis, text_pitch=None, has_video=False, harmonic_data=None, output_path_suffix="submission_report"):
-    # Using standard fonts that don't require a .ttf file
     styles = getSampleStyleSheet()
     normal_style = ParagraphStyle(name='Normal', parent=styles['Normal'], fontName='Helvetica', fontSize=12, leading=15)
     title_style = ParagraphStyle(name='Title', parent=styles['Heading2'], fontName='Helvetica-Bold', fontSize=14, leading=18, spaceAfter=12)
@@ -1052,7 +1027,7 @@ def generate_tags_gemini(file_path, file_type):
         No explanation, no extra text.
     """
     video_file_name = None
-    model = genai.GenerativeModel('gemini-2.5-flash') # Use Gemini 2.5 Flash for all tasks
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     try:
         if file_type in ['mp4', 'mov', 'webm']:
@@ -1163,12 +1138,6 @@ def generate_memo_from_drive(deal_name):
     for file in files:
         file_mime_type = file.get('mimeType')
         if file_mime_type == 'application/pdf':
-            # st.info(f"Processing PDF document: {file['name']}")
-            # try:
-            #     file_bytes_io = download_file_from_drive(file['id'], drive_service)
-            #     gemini_inputs.append(genai.upload_file(file_bytes_io, mime_type='application/pdf'))
-            # except Exception as e:
-            #     st.warning(f"Could not process PDF {file['name']}: {e}")
             st.info(f"Processing PDF document: {file['name']}")
             try:
                 file_bytes_io = download_file_from_drive(file['id'], drive_service)
@@ -1879,7 +1848,6 @@ st.set_page_config(
 st.sidebar.title("Y+ Ventures Portal")
 app_mode = st.sidebar.radio("Select Interface", ["Founder Interface", "VC Interface"])
 
-# Define your VC password
 VC_PASSWORD = st.secrets["passwords"]["vc_password"]
 
 if app_mode == "Founder Interface":
@@ -1904,5 +1872,4 @@ else:  # VC Interface
                 st.error("Incorrect password. Try again.")
 
     else:
-        # st.set_page_config(page_title="VC Dealflow Management", layout="wide")
         vc_main_app_logic()

@@ -1,4 +1,8 @@
-# I apologize in advance for the messy code and lack of comments
+# Note: I apologize in advance for the messy code and lack of comments. Some of the functions may not be used
+# as they are vestigial remnants of earlier iterations of the program. Some of the functions may also be under
+# incorrect sections.
+
+# This includes the multimodal AI architecture and training methods.
 
 import os
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -10,7 +14,6 @@ import numpy as np
 import torch
 import torchaudio
 import torchvision.transforms as T
-# import mediapipe as mp
 from mediapipe.python.solutions import face_mesh, face_detection
 class mp:
     solutions = type("solutions", (), {})()
@@ -65,7 +68,7 @@ transform = T.Compose([
     T.ToTensor()
 ])
 
-# ---- [MODIFIED] Face Alignment ----
+# ---- Face Alignment ----
 def extract_face_crops(video_path, max_frames=30):
     cap = cv2.VideoCapture(video_path)
     mp_face = mp.solutions.face_mesh.FaceMesh(static_image_mode=False)
@@ -165,7 +168,7 @@ class VisionEncoder(nn.Module):
         x = self.cnn(x)
         return x.view(B, T, -1)
     
-# ---- [NEW] Positional Encoding ----
+# ---- Positional Encoding ----
 class PositionalEncoding(nn.Module):
     def __init__(self, dim, max_len=512):
         super().__init__()
@@ -179,7 +182,7 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         return x + self.pe[:, :x.size(1)]
 
-# ---- [MODIFIED] Transformer Fusion ----
+# ---- Transformer Fusion ----
 class TransformerFusion(nn.Module):
     def __init__(self, dim=512, heads=8, seq_len=60):
         super().__init__()
@@ -235,7 +238,7 @@ class CombinedLoss(nn.Module):
         # Combined weighted loss
         return self.alpha * mse_loss + (1 - self.alpha) * pearson_loss
 
-# ---- [MODIFIED] Training Loop w/ Early Stopping ----
+# ---- Training Loop w/ Early Stopping ----
 def train_model(Xf, Xa, Y, patience=5):
     bins = np.digitize([y.mean().item() for y in Y], bins=[0.3, 0.5, 0.7])
     sss = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED)
